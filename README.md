@@ -4,13 +4,12 @@
 
 This workshop is aimed at demonstrating core features and benefits of contract testing with Pact.
 
-Whilst contract testing can be applied retrospectively to systems, we will follow the [consumer driven contracts](https://martinfowler.com/articles/consumerDrivenContracts.html) approach in this workshop - where a new consumer and provider are created in parallel to evolve a service over time, especially where there is some uncertainty with what is to be built.
 
-This workshop should take from 1 to 2 hours, depending on how deep you want to go into each topic.
+This workshop should take from 1,5 to 2 hours, depending on how deep you want to go into each topic.
 
 **Workshop outline**:
 
-- [step 1: **create consumer**](https://github.com/pact-foundation/pact-workshop-js/tree/step1#step-1---simple-consumer-calling-provider): Create our consumer before the Provider API even exists
+- [step 1: **create consumer**](https://github.com/npawlak/pactflow2/tree/step1---simple-consumer-calling-provider): Create our consumer before the Provider API even exists
 - [step 2: **unit test**](https://github.com/pact-foundation/pact-workshop-js/tree/step2#step-2---client-tested-but-integration-fails): Write a unit test for our consumer
 - [step 3: **pact test**](https://github.com/pact-foundation/pact-workshop-js/tree/step3#step-3---pact-to-the-rescue): Write a Pact test for our consumer
 - [step 4: **pact verification**](https://github.com/pact-foundation/pact-workshop-js/tree/step4#step-4---verify-the-provider): Verify the consumer pact with the Provider API
