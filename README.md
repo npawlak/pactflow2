@@ -9,11 +9,11 @@ This workshop should take from 1,5 to 2 hours, depending on how deep you want to
 
 **Workshop outline**:
 
-- [step 1: **create consumer**](https://github.com/npawlak/pactflow2/tree/step1---simple-consumer-calling-provider): Create our consumer before the Provider API even exists
-- [step 2: **unit test**](https://github.com/pact-foundation/pact-workshop-js/tree/step2#step-2---client-tested-but-integration-fails): Write a unit test for our consumer
-- [step 3: **pact test**](https://github.com/pact-foundation/pact-workshop-js/tree/step3#step-3---pact-to-the-rescue): Write a Pact test for our consumer
-- [step 4: **pact verification**](https://github.com/pact-foundation/pact-workshop-js/tree/step4#step-4---verify-the-provider): Verify the consumer pact with the Provider API
-- [step 5: **fix consumer**](https://github.com/pact-foundation/pact-workshop-js/tree/step5#step-5---back-to-the-client-we-go): Fix the consumer's bad assumptions about the Provider
+- [step 1: **create consumer**](https://github.com/npawlak/pactflow2/tree/step1?tab=readme-ov-file#step-1---simple-consumer-calling-provider): Create our consumer before the Provider API even exists
+- [step 2: **unit test**](https://github.com/npawlak/pactflow2/tree/step2?tab=readme-ov-file#step-2---client-tested-but-integration-fails): Write a unit test for our consumer
+- [step 3: **pact test**](https://github.com/npawlak/pactflow2/tree/step3?tab=readme-ov-file#step-3---pact-to-the-rescue): Write a Pact test for our consumer
+- [step 4: **pact verification**](https://github.com/npawlak/pactflow2/tree/step4?tab=readme-ov-file#step-4---verify-the-provider): Verify the consumer pact with the Provider API
+- [step 5: **fix consumer**](https://github.com/npawlak/pactflow2/tree/step5?tab=readme-ov-file#step-5---back-to-the-client-we-go): Fix the consumer's bad assumptions about the Provider
 - [step 6: **pact test**](https://github.com/pact-foundation/pact-workshop-js/tree/step6#step-6---consumer-updates-contract-for-missing-products): Write a pact test for `404` (missing User) in consumer
 - [step 7: **provider states**](https://github.com/pact-foundation/pact-workshop-js/tree/step7#step-7---adding-the-missing-states): Update API to handle `404` case
 - [step 8: **pact test**](https://github.com/pact-foundation/pact-workshop-js/tree/step8#step-8---authorization): Write a pact test for the `401` case
