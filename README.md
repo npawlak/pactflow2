@@ -4,8 +4,9 @@
 
 This workshop is aimed at demonstrating core features and benefits of contract testing with Pact.
 
+Whilst contract testing can be applied retrospectively to systems, we will follow the [consumer driven contracts](https://martinfowler.com/articles/consumerDrivenContracts.html) approach in this workshop - where a new consumer and provider are created in parallel to evolve a service over time, especially where there is some uncertainty with what is to be built.
 
-This workshop should take from 1,5 to 2 hours, depending on how deep you want to go into each topic.
+This workshop should take from 1 to 2 hours, depending on how deep you want to go into each topic.
 
 **Workshop outline**:
 
@@ -107,3 +108,283 @@ We can run the client with `npm start --prefix consumer` - it should fail with t
 ![Failed step1 page](diagrams/workshop_step1_failed_page.png)
 
 *Move on to [step 2](https://github.com/pact-foundation/pact-workshop-js/tree/step2#step-2---client-tested-but-integration-fails)*
+
+## Step 2 - Client Tested but integration fails
+
+_NOTE: Move to step 2:_
+
+_`git checkout step2`_
+
+_`npm install`_
+
+<hr/>
+
+Now lets create a basic test for our API client. We're going to check 2 things:
+
+1. That our client code hits the expected endpoint
+2. That the response is marshalled into an object that is usable, with the correct ID
+
+You can see the client interface test we created in `consumer/src/api.spec.js`:
+
+```javascript
+import API from "./api";
+import nock from "nock";
+
+describe("API", () => {
+
+    test("get all products", async () => {
+        const products = [
+            {
+                "id": "9",
+                "type": "CREDIT_CARD",
+                "name": "GEM Visa",
+                "version": "v2"
+            },
+            {
+                "id": "10",
+                "type": "CREDIT_CARD",
+                "name": "28 Degrees",
+                "version": "v1"
+            }
+        ];
+        nock(API.url)
+            .get('/products')
+            .reply(200,
+                products,
+                {'Access-Control-Allow-Origin': '*'});
+        const respProducts = await API.getAllProducts();
+        expect(respProducts).toEqual(products);
+    });
+
+    test("get product ID 50", async () => {
+        const product = {
+            "id": "50",
+            "type": "CREDIT_CARD",
+            "name": "28 Degrees",
+            "version": "v1"
+        };
+        nock(API.url)
+            .get('/products/50')
+            .reply(200, product, {'Access-Control-Allow-Origin': '*'});
+        const respProduct = await API.getProduct("50");
+        expect(respProduct).toEqual(product);
+    });
+});
+```
+
+
+
+![Unit Test With Mocked Response](diagrams/workshop_step2_unit_test.svg)
+
+
+
+Let's run this test and see it all pass:
+
+```console
+❯ npm test --prefix consumer
+
+PASS src/api.spec.js
+  API
+    ✓ get all products (15ms)
+    ✓ get product ID 50 (3ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        1.03s
+Ran all test suites.
+```
+
+If you encounter failing tests after running `npm test --prefix consumer`, make sure that the current branch is `step2`.
+
+Meanwhile, our provider team has started building out their API in parallel. Let's run our website against our provider (you'll need two terminals to do this):
+
+
+```console
+# Terminal 1
+❯ npm start --prefix provider
+
+Provider API listening on port 8080...
+```
+
+```console
+# Terminal 2
+> npm start --prefix consumer
+
+Compiled successfully!
+
+You can now view pact-workshop-js in the browser.
+
+  Local:            http://127.0.0.1:3000/
+  On Your Network:  http://192.168.20.17:3000/
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+```
+
+You should now see a screen showing 3 different products. There is a `See more!` button which should display detailed product information.
+
+Let's see what happens!
+
+![Failed page](diagrams/workshop_step2_failed_page.png)
+
+Doh! We are getting 404 everytime we try to view detailed product information. On closer inspection, the provider only knows about `/product/{id}` and `/products`.
+
+We need to have a conversation about what the endpoint should be, but first...
+
+*Move on to [step 3](https://github.com/pact-foundation/pact-workshop-js/tree/step3#step-3---pact-to-the-rescue)*
+
+## Step 3 - Pact to the rescue
+
+_NOTE: Move to step 3:_
+
+_`git checkout step3`_
+
+_`npm install`_
+
+<hr/>
+
+Unit tests are written and executed in isolation of any other services. When we write tests for code that talk to other services, they are built on trust that the contracts are upheld. There is no way to validate that the consumer and provider can communicate correctly.
+
+> An integration contract test is a test at the boundary of an external service verifying that it meets the contract expected by a consuming service — [Martin Fowler](https://martinfowler.com/bliki/IntegrationContractTest.html)
+
+Adding contract tests via Pact would have highlighted the `/product/{id}` endpoint was incorrect.
+
+Let us add Pact to the project and write a consumer pact test for the `GET /products/{id}` endpoint.
+
+*Provider states* is an important concept of Pact that we need to introduce. These states help define the state that the provider should be in for specific interactions. For the moment, we will initially be testing the following states:
+
+- `product with ID 10 exists`
+- `products exist`
+
+The consumer can define the state of an interaction using the `given` property.
+
+Note how similar it looks to our unit test:
+
+In `consumer/src/api.pact.spec.js`:
+
+```javascript
+import path from "path";
+import { PactV3, MatchersV3, SpecificationVersion, } from "@pact-foundation/pact";
+import { API } from "./api";
+const { eachLike, like } = MatchersV3;
+
+const provider = new PactV3({
+  consumer: "FrontendWebsite",
+  provider: "ProductService",
+  log: path.resolve(process.cwd(), "logs", "pact.log"),
+  logLevel: "warn",
+  dir: path.resolve(process.cwd(), "pacts"),
+  spec: SpecificationVersion.SPECIFICATION_VERSION_V2,
+  host: "127.0.0.1"
+});
+
+describe("API Pact test", () => {
+  describe("getting all products", () => {
+    test("products exists", async () => {
+      // set up Pact interactions
+      await provider.addInteraction({
+        states: [{ description: "products exist" }],
+        uponReceiving: "get all products",
+        withRequest: {
+          method: "GET",
+          path: "/products",
+        },
+        willRespondWith: {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+          body: eachLike({
+            id: "09",
+            type: "CREDIT_CARD",
+            name: "Gem Visa",
+          }),
+        },
+      });
+
+      await provider.executeTest(async (mockService) => {
+        const api = new API(mockService.url);
+
+        // make request to Pact mock server
+        const product = await api.getAllProducts();
+
+        expect(product).toStrictEqual([
+          { id: "09", name: "Gem Visa", type: "CREDIT_CARD" },
+        ]);
+      });
+    });
+  });
+
+  describe("getting one product", () => {
+    test("ID 10 exists", async () => {
+      // set up Pact interactions
+      await provider.addInteraction({
+        states: [{ description: "product with ID 10 exists" }],
+        uponReceiving: "get product with ID 10",
+        withRequest: {
+          method: "GET",
+          path: "/products/10",
+        },
+        willRespondWith: {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+          body: like({
+            id: "10",
+            type: "CREDIT_CARD",
+            name: "28 Degrees",
+          }),
+        },
+      });
+
+      await provider.executeTest(async (mockService) => {
+        const api = new API(mockService.url);
+
+        // make request to Pact mock server
+        const product = await api.getProduct("10");
+
+        expect(product).toStrictEqual({
+          id: "10",
+          type: "CREDIT_CARD",
+          name: "28 Degrees",
+        });
+      });
+    });
+  });
+});
+```
+
+
+![Test using Pact](diagrams/workshop_step3_pact.svg)
+
+This test starts a mock server a random port that acts as our provider service. To get this to work we update the URL in the `Client` that we create, after initialising Pact.
+
+To simplify running the tests, add this to `consumer/package.json`:
+
+```javascript
+// add it under scripts
+"test:pact": "cross-env CI=true react-scripts test --testTimeout 30000 pact.spec.js",
+```
+
+Running this test still passes, but it creates a pact file which we can use to validate our assumptions on the provider side, and have conversation around.
+
+```console
+❯ npm run test:pact --prefix consumer
+
+PASS src/api.spec.js
+PASS src/api.pact.spec.js
+
+Test Suites: 2 passed, 2 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        2.792s, estimated 3s
+Ran all test suites.
+```
+
+A pact file should have been generated in *consumer/pacts/FrontendWebsite-ProductService.json*
+
+*NOTE*: even if the API client had been graciously provided for us by our Provider Team, it doesn't mean that we shouldn't write contract tests - because the version of the client we have may not always be in sync with the deployed API - and also because we will write tests on the output appropriate to our specific needs.
+
+*Move on to [step 4](https://github.com/pact-foundation/pact-workshop-js/tree/step4#step-4---verify-the-provider)*
