@@ -4,25 +4,23 @@
 
 This workshop is aimed at demonstrating core features and benefits of contract testing with Pact.
 
-Whilst contract testing can be applied retrospectively to systems, we will follow the [consumer driven contracts](https://martinfowler.com/articles/consumerDrivenContracts.html) approach in this workshop - where a new consumer and provider are created in parallel to evolve a service over time, especially where there is some uncertainty with what is to be built.
-
 This workshop should take from 1 to 2 hours, depending on how deep you want to go into each topic.
 
 **Workshop outline**:
 
-- [step 1: **create consumer**](https://github.com/pact-foundation/pact-workshop-js/tree/step1#step-1---simple-consumer-calling-provider): Create our consumer before the Provider API even exists
-- [step 2: **unit test**](https://github.com/pact-foundation/pact-workshop-js/tree/step2#step-2---client-tested-but-integration-fails): Write a unit test for our consumer
-- [step 3: **pact test**](https://github.com/pact-foundation/pact-workshop-js/tree/step3#step-3---pact-to-the-rescue): Write a Pact test for our consumer
-- [step 4: **pact verification**](https://github.com/pact-foundation/pact-workshop-js/tree/step4#step-4---verify-the-provider): Verify the consumer pact with the Provider API
-- [step 5: **fix consumer**](https://github.com/pact-foundation/pact-workshop-js/tree/step5#step-5---back-to-the-client-we-go): Fix the consumer's bad assumptions about the Provider
-- [step 6: **pact test**](https://github.com/pact-foundation/pact-workshop-js/tree/step6#step-6---consumer-updates-contract-for-missing-products): Write a pact test for `404` (missing User) in consumer
-- [step 7: **provider states**](https://github.com/pact-foundation/pact-workshop-js/tree/step7#step-7---adding-the-missing-states): Update API to handle `404` case
-- [step 8: **pact test**](https://github.com/pact-foundation/pact-workshop-js/tree/step8#step-8---authorization): Write a pact test for the `401` case
-- [step 9: **pact test**](https://github.com/pact-foundation/pact-workshop-js/tree/step9#step-9---implement-authorisation-on-the-provider): Update API to handle `401` case
-- [step 10: **request filters**](https://github.com/pact-foundation/pact-workshop-js/tree/step10#step-10---request-filters-on-the-provider): Fix the provider to support the `401` case
-- [step 11: **pact broker**](https://github.com/pact-foundation/pact-workshop-js/tree/step11#step-11---using-a-pact-broker): Implement a broker workflow for integration with CI/CD
-- [step 12: **broker webhooks**](https://github.com/pact-foundation/pact-workshop-js/tree/step12#step-12---using-webhooks): Trigger provider workflows when contracts change, via webhooks
-- [step 13: **pactflow broker**](https://github.com/pact-foundation/pact-workshop-js/tree/step13#step-13---using-a-pactflow-broker): Implement a managed pactflow workflow for integration with CI/CD
+- [step 1: **create consumer**](https://github.com/npawlak/pactflow2/tree/step1?tab=readme-ov-file#step-1---simple-consumer-calling-provider): Create our consumer before the Provider API even exists
+- [step 2: **unit test**](https://github.com/npawlak/pactflow2/tree/step2?tab=readme-ov-file#step-2---client-tested-but-integration-fails): Write a unit test for our consumer
+- [step 3: **pact test**](https://github.com/npawlak/pactflow2/tree/step3?tab=readme-ov-file#step-3---pact-to-the-rescue): Write a Pact test for our consumer
+- [step 4: **pact verification**](https://github.com/npawlak/pactflow2/tree/step4?tab=readme-ov-file#step-4---verify-the-provider): Verify the consumer pact with the Provider API
+- [step 5: **fix consumer**](https://github.com/npawlak/pactflow2/tree/step5?tab=readme-ov-file#step-5---back-to-the-client-we-go): Fix the consumer's bad assumptions about the Provider
+- [step 6: **pact test**](https://github.com/npawlak/pactflow2/tree/step5?tab=readme-ov-file#step-6---consumer-updates-contract-for-missing-products): Write a pact test for `404` (missing User) in consumer
+- [step 7: **provider states**](https://github.com/npawlak/pactflow2/tree/step7?tab=readme-ov-file#step-7---adding-the-missing-states): Update API to handle `404` case
+- [step 8: **pact test**](https://github.com/npawlak/pactflow2/tree/step8?tab=readme-ov-file#step-8---authorization): Write a pact test for the `401` case
+- [step 9: **pact test**](https://github.com/npawlak/pactflow2/tree/step9?tab=readme-ov-file#step-9---implement-authorisation-on-the-provider): Update API to handle `401` case
+- [step 10: **request filters**](https://github.com/npawlak/pactflow2/tree/step10?tab=readme-ov-file#step-10---request-filters-on-the-provider): Fix the provider to support the `401` case
+- [step 11: **pact broker**](https://github.com/npawlak/pactflow2/tree/step11?tab=readme-ov-file#step-11---using-a-pact-broker): Implement a broker workflow for integration with CI/CD
+- [step 12: **broker webhooks**](https://github.com/npawlak/pactflow2/tree/step12?tab=readme-ov-file#step-12---using-webhooks): Trigger provider workflows when contracts change, via webhooks
+- [step 13: **pactflow broker**](https://github.com/npawlak/pactflow2/tree/step13?tab=readme-ov-file#step-13---using-a-pactflow-broker): Implement a managed pactflow workflow for integration with CI/CD
 
 _NOTE: Each step is tied to, and must be run within, a git branch, allowing you to progress through each stage incrementally._
 
@@ -107,7 +105,7 @@ We can run the client with `npm start --prefix consumer` - it should fail with t
 
 ![Failed step1 page](diagrams/workshop_step1_failed_page.png)
 
-*Move on to [step 2](https://github.com/pact-foundation/pact-workshop-js/tree/step2#step-2---client-tested-but-integration-fails)*
+*Move on to [step 2](https://github.com/npawlak/pactflow2/tree/step2?tab=readme-ov-file#step-2---client-tested-but-integration-fails)*
 
 ## Step 2 - Client Tested but integration fails
 
@@ -232,7 +230,7 @@ Doh! We are getting 404 everytime we try to view detailed product information. O
 
 We need to have a conversation about what the endpoint should be, but first...
 
-*Move on to [step 3](https://github.com/pact-foundation/pact-workshop-js/tree/step3#step-3---pact-to-the-rescue)*
+*Move on to [step 3](https://github.com/npawlak/pactflow2/tree/step3?tab=readme-ov-file#step-3---pact-to-the-rescue)*
 
 ## Step 3 - Pact to the rescue
 
@@ -387,7 +385,7 @@ A pact file should have been generated in *consumer/pacts/FrontendWebsite-Produc
 
 *NOTE*: even if the API client had been graciously provided for us by our Provider Team, it doesn't mean that we shouldn't write contract tests - because the version of the client we have may not always be in sync with the deployed API - and also because we will write tests on the output appropriate to our specific needs.
 
-*Move on to [step 4](https://github.com/pact-foundation/pact-workshop-js/tree/step4#step-4---verify-the-provider)*
+*Move on to [step 4](https://github.com/npawlak/pactflow2/tree/step4?tab=readme-ov-file#step-4---verify-the-provider)*
 
 ## Step 4 - Verify the provider
 
@@ -481,7 +479,7 @@ The test has failed, as the expected path `/products/{id}` is returning 404. We 
 
 The correct endpoint which the consumer should call is `/product/{id}`.
 
-Move on to [step 5](https://github.com/pact-foundation/pact-workshop-js/tree/step5#step-5---back-to-the-client-we-go)
+Move on to [step 5](https://github.com/npawlak/pactflow2/tree/step5?tab=readme-ov-file#step-5---back-to-the-client-we-go)
 
 ## Step 5 - Back to the client we go
 
@@ -575,4 +573,4 @@ Verifying a pact between FrontendWebsite and ProductService
 
 Yay - green ✅!
 
-Move on to [step 6](https://github.com/pact-foundation/pact-workshop-js/tree/step6#step-6---consumer-updates-contract-for-missing-products)
+Move on to [step 6](https://github.com/npawlak/pactflow2/tree/step5?tab=readme-ov-file#step-6---consumer-updates-contract-for-missing-products)
