@@ -573,4 +573,4 @@ Verifying a pact between FrontendWebsite and ProductService
 
 Yay - green ✅!
 
-Move on to [step 6](https://github.com/npawlak/pactflow2/tree/step5?tab=readme-ov-file#step-6---consumer-updates-contract-for-missing-products)
+Move on to [step 6](https://github.com/npawlak/pactflow2/tree/step6?tab=readme-ov-file#step-6---consumer-updates-contract-for-missing-products)
